@@ -55,9 +55,11 @@ public final class JsonRunner implements Runner {
     private SocketServer createSocketServer(final Iterable<? extends RunnerSetting> settings,
                                             final StartArgs startArgs) {
         int port = startArgs.getPort().orElse(0);
-        SocketServer socketServer = ActualSocketServer.createLogServer(port);
+
+        SocketServer socketServer = ActualSocketServer.createSocketServer(port, startArgs.isQuiet());
+
         for (RunnerSetting setting : settings) {
-            SocketServer parsedServer = socketParser.parseServer(setting.getStreams(), port,
+            SocketServer parsedServer = socketParser.parseServer(setting.getStreams(), port, startArgs.isQuiet(),
                     toConfigs(setting));
             socketServer = mergeServer(socketServer, parsedServer);
         }
@@ -83,7 +85,7 @@ public final class JsonRunner implements Runner {
 
         for (RunnerSetting setting : settings) {
             HttpServer parsedServer = httpParser.parseServer(setting.getStreams(),
-                    startArgs.getPort().orElse(0), toConfigs(setting));
+                    startArgs.getPort().orElse(0), startArgs.isQuiet(), toConfigs(setting));
             targetServer = mergeServer(targetServer, parsedServer);
         }
 
@@ -91,11 +93,13 @@ public final class JsonRunner implements Runner {
     }
 
     private HttpServer createHttpServer(final StartArgs startArgs) {
+        final int port = startArgs.getPort().orElse(0);
+
         if (startArgs.isHttps()) {
-            return ActualHttpServer.createHttpsLogServer(startArgs.getPort().orElse(0), startArgs.getHttpsCertificate().get());
+            return ActualHttpServer.createHttpsServer(port, startArgs.isQuiet(), startArgs.getHttpsCertificate().get());
         }
 
-        return ActualHttpServer.createLogServer(startArgs.getPort().orElse(0));
+        return ActualHttpServer.createHttpServer(port, startArgs.isQuiet());
     }
 
     private MocoConfig[] toConfigs(final RunnerSetting setting) {

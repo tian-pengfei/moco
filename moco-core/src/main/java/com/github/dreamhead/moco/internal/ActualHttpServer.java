@@ -67,7 +67,11 @@ public class ActualHttpServer extends HttpConfiguration<ActualHttpServer> {
     }
 
     protected final ActualHttpServer createMergeServer(final ActualHttpServer thatServer) {
-        return newBaseServer(mergePort(this, thatServer).orElse(0), mergedCertificate(this.certificate, thatServer.certificate));
+        return newBaseServer(mergePort(this, thatServer).orElse(0), isQuiet(this, thatServer), mergedCertificate(this.certificate, thatServer.certificate));
+    }
+
+    private boolean isQuiet(final ActualHttpServer thisServer, final ActualHttpServer thatServer) {
+        return thisServer.isQuiet() && thatServer.isQuiet();
     }
 
     private Optional<Integer> mergePort(final ActualHttpServer thisServer, final ActualHttpServer thatServer) {
@@ -88,9 +92,26 @@ public class ActualHttpServer extends HttpConfiguration<ActualHttpServer> {
         return other;
     }
 
-    private ActualHttpServer newBaseServer(final int port, final HttpsCertificate certificate) {
+    private ActualHttpServer newBaseServer(final int port, final boolean quite, final HttpsCertificate certificate) {
         if (certificate != null) {
-            return createHttpsLogServer(port, certificate);
+            return createHttpsServer(port, quite, certificate);
+        }
+
+        return createHttpServer(port, quite);
+    }
+
+    public static ActualHttpServer createHttpsServer(final int port, final boolean quite,
+                                                      final HttpsCertificate certificate) {
+        if (quite) {
+            return createHttpsQuietServer(port, certificate);
+        }
+
+        return createHttpsLogServer(port, certificate);
+    }
+
+    public static ActualHttpServer createHttpServer(final int port, final boolean quite) {
+        if (quite) {
+            return createQuietServer(port);
         }
 
         return createLogServer(port);
@@ -100,6 +121,14 @@ public class ActualHttpServer extends HttpConfiguration<ActualHttpServer> {
                                                                final MocoMonitor monitor,
                                                                final MocoConfig... configs) {
         return new ActualHttpServer(port, null, new ThreadSafeMonitor(monitor), configs);
+    }
+
+    public static ActualHttpServer createHttpServer(final int port, final boolean quiet, final MocoConfig[] configs) {
+        if (quiet) {
+            return createQuietServer(port, configs);
+        }
+
+        return createLogServer(port, configs);
     }
 
     public static ActualHttpServer createLogServer(final int port, final MocoConfig... configs) {

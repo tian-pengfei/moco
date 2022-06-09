@@ -460,7 +460,7 @@ public class MocoTemplateTest extends AbstractMocoHttpTest {
     @Test
     public void should_return_json() throws Exception {
         server.request(by(uri("/template"))).response(template("${req.json.code} ${req.json.message}"));
-        running(server, () -> assertThat(helper.postContent(remoteUrl("/template"), "{\n\t\"code\":1,\n\t\"message\":\"message\"\n}"), is("1 message")));
+        running(server, () -> assertThat(helper.postContent(remoteUrl("/template"), "{\"code\":1,\"message\":\"message\"}"), is("1 message")));
     }
 
     @Test
@@ -489,5 +489,17 @@ public class MocoTemplateTest extends AbstractMocoHttpTest {
         server.request(by(uri("/template"))).response(template("${var}", "var", var(request -> "TEMPLATE")));
 
         running(server, () -> assertThat(helper.get(remoteUrl("/template")), is("TEMPLATE")));
+    }
+
+    @Test
+    public void should_return_with_xml() throws Exception {
+        server.request(by(uri("/template"))).response(template("${req.xml.parameter.id}"));
+        running(server, () -> assertThat(helper.postContent(remoteUrl("/template"), "<request><parameter><id>1</id></parameter></request>"), is("1")));
+    }
+
+    @Test
+    public void should_return_bad_request_for_unknown_xml() throws Exception {
+        server.request(by(uri("/template"))).response(template("${req.xml.parameter.id}"));
+        running(server, () -> assertThat(helper.postForResponse(remoteUrl("/template"), "foo").getStatusLine().getStatusCode(), is(400)));
     }
 }

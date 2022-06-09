@@ -48,6 +48,14 @@ public final class ActualSocketServer extends BaseActualServer<SocketResponseSet
         return new ActualSocketServer(port, new QuietMonitor());
     }
 
+    public static ActualSocketServer createSocketServer(final int port, final boolean quiet) {
+        if (quiet) {
+            return createQuietServer(port);
+        }
+
+        return createLogServer(port);
+    }
+
     public static ActualSocketServer createServerWithMonitor(final int port, final MocoMonitor monitor) {
         return new ActualSocketServer(port, monitor);
     }

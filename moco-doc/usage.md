@@ -31,7 +31,7 @@ Moco has been published on Maven repository, so you can refer to it directly in 
 <dependency>
   <groupId>com.github.dreamhead</groupId>
   <artifactId>moco-core</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
   testImplementation(
-    "com.github.dreamhead:moco-core:1.2.0",
+    "com.github.dreamhead:moco-core:1.3.0",
   )
 }
 ```
@@ -152,7 +152,7 @@ Now, open your browser and input "http://localhost:12306". You will see "foo". T
 
 **@Since 0.10.0**
 
-If you have setup your server with JSON configuration, you can also your configuration from Java API.
+If you have setup your server with JSON configuration, you can also run with your configuration from Java API.
 
 ```java
 import static com.github.dreamhead.moco.Moco.file;

@@ -555,7 +555,7 @@ server.request(eq(xpath("/request/parameters/id/text()"), "1")).response("bar");
 
 ### XML Struct
 
-**@Since will be at next release**
+**@Since 1.3.0**
 
 Moco also allows you to match an XML request only for same struct no matter what actual content is.
 
@@ -598,7 +598,7 @@ server.request(json(text("{\"foo\":\"bar\"}"))).response("foo");
 
 
 **@Since 0.12.0**
-`json` will return a resource from next release
+`json` will return a resource from 1.3.0.
 
 ```java
 server.request(by(json(text("{\"foo\":\"bar\"}")))).response("foo");
@@ -640,7 +640,7 @@ server.request(json(pojo)).response("foo");
 ```
 
 **@Since 0.12.0**
-`json` will return a resource from next release
+`json` will return a resource from 1.3.0.
 
 ```java
 server.request(by(json(pojo))).response("foo");
@@ -727,7 +727,7 @@ server.request(eq(jsonPath("$.book[*].price"), "1")).response("response_for_json
 
 ### JSON Struct
 
-**@Since will be at next release**
+**@Since 1.3.0**
 
 Moco also allows you to match a JSON request only for same struct no matter what actual content is.
 
@@ -932,7 +932,7 @@ For JSON API, you can decide whether the information does not exist.
 
 ### Conditional
 
-**@Since will be at next release**
+**@Since 1.3.0**
 
 If you want to implement your own matcher, you can write with `conditional` API which is supported in Java code.
 
@@ -2230,7 +2230,9 @@ server.request(by(uri("/template"))).response(template("${req.cookies['foo']}"))
 #### JSON
 **@Since 1.0.0**
 
-If your request is a JSON request, you can use `req.json` to visit your json object.
+If your request is a JSON request, you can use `req.json` to visit your json object. 
+
+**Note** that make sure your request is a JSON request, otherwise an exception will be thrown. 
 
 * Java
 
@@ -2253,6 +2255,33 @@ server.request(by(uri("/template"))).response(template("${req.json.foo}"));
 }
 ```
 
+#### XML
+**@Since will be at next release**
+
+If your request is an XML request, you can use `req.xml` to visit your json object.
+
+**Note** that make sure your request is an XML request, otherwise an exception will be thrown.
+
+* Java
+
+```java
+server.request(by(uri("/template"))).response(template("${req.xml.foo}"));
+```
+
+* JSON
+
+```json
+{
+    "request": {
+        "uri": "/template"
+    },
+    "response": {
+        "text": {
+            "template": "${req.xml.foo}"
+        }
+    }
+}
+```
 
 ### Custom Variable
 **@Since 0.9.1**
@@ -2397,6 +2426,7 @@ server.request(by(uri("/template"))).response(template("${random(100)}"));
     }
 }
 ```
+**@Since 1.3.0**
 
 If you want to limit your random number in a range. You can give two number as a start and an end.
 
@@ -2594,11 +2624,11 @@ server.request(by(uri("/event"))).response("event").on(complete(post("http://loc
 ## Record and Replay
 **@Since 1.1.0**
 
-More powerful dynamic feature are required even if you can implement some with template. For instance, you want to change one URL to return different response. Record and replay will help.
+More powerful dynamic features are required even if you can implement some with a template. For instance, you may want to change one URL to return a different response. Record and replay will help.
 
-In the following, `/record` will use to record request and `/replay` will return the recorded request content. You can also configure your record and replay for more capability.
+In the following, `/record` will be used to record request and `/replay` will return the recorded request content. You can also configure record and replay for more capabilities.
 
-In this case, `group` will be used to distinguish different record source.
+In this case, `group` will be used to distinguish different record sources.
 
 ```java
 server.request(by(uri("/record"))).response(record(group("foo")));

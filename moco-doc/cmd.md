@@ -1,7 +1,7 @@
 # Standalone Command Line
 
 Moco can be used as standalone to run with configuration and you can download standalone directly:
-[Standalone Moco Runner](https://repo1.maven.org/maven2/com/github/dreamhead/moco-runner/1.2.0/moco-runner-1.2.0-standalone.jar)
+[Standalone Moco Runner](https://repo1.maven.org/maven2/com/github/dreamhead/moco-runner/1.3.0/moco-runner-1.3.0-standalone.jar)
 
 First of all, a JSON configuration file needs to be provided to start Moco.
 
@@ -103,11 +103,18 @@ If you don't need any specified port, you run run Moco without port.
 java -jar moco-runner-<version>-standalone.jar http -c foo.json
 ```
 
-An available port will picked up by Moco and you can see the port in console.
+An available port will be picked up by Moco and you can see the port in console.
 
 ```shell
 20 Oct 2015 22:10:18 [main] INFO  Server is started at 58593
 20 Oct 2015 22:10:18 [main] INFO  Shutdown port is 58594
+```
+
+## Quiet Mode
+
+If you don't want see too many logs, you could make the server quiet.
+```shell
+java -jar moco-runner-<version>-standalone.jar http -p 12306 -c foo.json -q
 ```
 
 ## Version

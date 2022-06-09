@@ -6,6 +6,7 @@ import com.github.dreamhead.moco.MocoEventAction;
 import com.github.dreamhead.moco.MocoException;
 import com.github.dreamhead.moco.Request;
 import com.github.dreamhead.moco.resource.Resource;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -13,6 +14,8 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 
 public abstract class MocoRequestAction implements MocoEventAction {
+    private final ActionMonitor monitor = new ActionMonitor();
+
     private final Resource url;
     private final HttpHeader[] headers;
 
@@ -26,7 +29,10 @@ public abstract class MocoRequestAction implements MocoEventAction {
     @Override
     public final void execute(final Request request) {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            client.execute(prepareRequest(request));
+            final HttpUriRequest actual = prepareRequest(request);
+            monitor.preAction(actual);
+            final CloseableHttpResponse response = client.execute(actual);
+            monitor.postAction(response);
         } catch (IOException e) {
             throw new MocoException(e);
         }

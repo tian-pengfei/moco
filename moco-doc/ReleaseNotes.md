@@ -1,5 +1,16 @@
 # Release
 ## APIs
+* `req.xml` is supported in template
+
+## CLI
+* add `-q` for quiet mode in standalone server  
+
+## Implementation Details
+* enhance log with query parameters
+* event action log is supported
+
+# Release 1.3.0 (1-Jan-2022)
+## APIs
 * `conditional` Java API allows you to write your own matcher
 * `random` template function supports start and end as range
 * `struct` API for JSON and XML which matches only struct no matter what content is. 
@@ -7,7 +18,7 @@
 ## Implementation Details
 * restart with configuration when new configuration is illegal. #304
 * enhance log with query parameters
-* `xml` returns ContentResource which is a break change.
+* `xml` returns ContentResource which is **A BREAK CHANGE**.
 
 # Release 1.2.0 (1-Apr-2021)
 
