@@ -9,11 +9,11 @@
     public static void main(java.lang.String[]);
 }
 
--keep public class com.github.dreamhead.moco.model.*{*;}
 -keep public class com.github.dreamhead.moco.parser.deserializer.*{*;}
 -keep public class com.github.dreamhead.moco.parser.model.*{*;}
 -keep public class com.github.dreamhead.moco.parser.model.websocket.*{*;}
 -keep public class com.github.dreamhead.moco.resource.reader.TemplateRequest{*;}
+-keep public class com.github.dreamhead.moco.resource.reader.TemplateRequest$TemplateClient{*;}
 -keep public class com.github.dreamhead.moco.Moco{*;}
 -keep public class com.github.dreamhead.moco.MocoRest{*;}
 -keep public class com.github.dreamhead.moco.HttpMethod{*;}
@@ -27,24 +27,35 @@
 -keep public class com.github.dreamhead.moco.runner.ShutdownRunner{
     public int shutdownPort();
 }
--keepclassmembers enum com.jayway.jsonpath.Option {
+
+-keep public class org.apache.http.conn.ssl.SSLConnectionSocketFactory{*;}
+-keep public class org.apache.http.impl.client.HttpClientBuilder{*;}
+-keep public class org.apache.http.client.fluent.Executor{*;}
+-keep public class org.apache.http.impl.conn.PoolingHttpClientConnectionManager{*;}
+-keep public class org.apache.http.client.protocol.HttpClientContext{*;}
+-keep public class org.apache.http.client.HttpClient{*;}
+-keep public class org.apache.http.impl.client.InternalHttpClient{*;}
+-keep public class org.apache.http.entity.ContentType{*;}
+-keep public class org.apache.http.entity.ByteArrayEntity{*;}
+-keep public class org.apache.http.util.EntityUtils{*;}
+-keep public class com.google.common.io.Files{*;}
+-keep public class com.google.common.collect.ImmutableMultimap{*;}
+-keep public class org.slf4j.LoggerFactory{*;}
+-keep public class ch.qos.logback.**{*;}
+-keep public class org.apache.commons.logging.impl.SimpleLog{*;}
+-keep public class org.apache.commons.logging.impl.LogFactoryImpl{*;}
+-keep public class com.fasterxml.jackson.core.type.TypeReference{*;}
+
+-keepclassmembers class * extends java.lang.Enum {
+    <fields>;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
--keep public class org.apache.http.**{*;}
--keep public class com.google.common.io.Files{*;}
--keep public class com.google.common.io.Resources{*;}
--keep public class com.google.common.collect.ImmutableMultimap{*;}
--keep public class com.google.common.net.MediaType{*;}
--keep public class org.slf4j.** {*;}
--keep public class ch.qos.logback.** {*;}
--keep public class org.apache.commons.logging.impl.**{*;}
--keep public class com.fasterxml.jackson.databind.**{*;}
--keep public class com.fasterxml.jackson.annotation.**{*;}
--keep public class com.fasterxml.jackson.core.type.TypeReference{*;}
 -keep public class io.netty.channel.DefaultChannelPipeline{*;}
 -keep public class io.netty.handler.codec.http.cookie.DefaultCookie{*;}
+-keep public class com.ctc.wstx.stax.WstxInputFactory{*;}
+-keep public class com.ctc.wstx.stax.WstxOutputFactory{*;}
 
 #jce.jar
 -dontwarn org.apache.http.impl.auth.**

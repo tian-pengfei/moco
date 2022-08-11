@@ -1,6 +1,7 @@
 # Release
 ## APIs
 * `req.xml` is supported in template
+* `req.client.address` is supported in template
 
 ## CLI
 * add `-q` for quiet mode in standalone server  
@@ -8,6 +9,7 @@
 ## Implementation Details
 * enhance log with query parameters
 * event action log is supported
+* reduce standalone jar size
 
 # Release 1.3.0 (1-Jan-2022)
 ## APIs

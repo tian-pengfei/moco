@@ -99,4 +99,20 @@ public final class TemplateRequest {
             throw new IllegalArgumentException("Xml content is expected", e);
         }
     }
+
+    public TemplateClient getClient() {
+        return new TemplateClient(this.request.getClientAddress());
+    }
+
+    public static class TemplateClient {
+        private final String address;
+
+        public TemplateClient(final String address) {
+            this.address = address;
+        }
+
+        public final String getAddress() {
+            return address;
+        }
+    }
 }
