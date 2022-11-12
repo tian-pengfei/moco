@@ -28,16 +28,14 @@
     public int shutdownPort();
 }
 
--keep public class org.apache.http.conn.ssl.SSLConnectionSocketFactory{*;}
--keep public class org.apache.http.impl.client.HttpClientBuilder{*;}
--keep public class org.apache.http.client.fluent.Executor{*;}
--keep public class org.apache.http.impl.conn.PoolingHttpClientConnectionManager{*;}
--keep public class org.apache.http.client.protocol.HttpClientContext{*;}
--keep public class org.apache.http.client.HttpClient{*;}
--keep public class org.apache.http.impl.client.InternalHttpClient{*;}
--keep public class org.apache.http.entity.ContentType{*;}
--keep public class org.apache.http.entity.ByteArrayEntity{*;}
--keep public class org.apache.http.util.EntityUtils{*;}
+-keep public class org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory{*;}
+-keep public class org.apache.hc.client5.http.impl.classic.HttpClientBuilder{*;}
+-keep public class org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder{*;}
+-keep public class org.apache.hc.core5.http.message.BasicClassicHttpRequest{*;}
+-keep public class org.apache.hc.core5.http.io.HttpClientResponseHandler{*;}
+-keep public class org.apache.hc.client5.http.config.RequestConfig{*;}
+-keep public class org.apache.hc.client5.http.ClientProtocolException{*;}
+
 -keep public class com.google.common.io.Files{*;}
 -keep public class com.google.common.collect.ImmutableMultimap{*;}
 -keep public class org.slf4j.LoggerFactory{*;}
@@ -80,3 +78,4 @@
 -dontwarn org.osgi.framework.**
 -dontwarn com.ctc.wstx.**
 -dontwarn jakarta.json.**
+-dontwarn org.conscrypt.**

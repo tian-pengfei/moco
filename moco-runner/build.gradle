@@ -15,7 +15,9 @@ project.dependencies {
     api(project(':moco-core'))
     implementation("commons-cli:commons-cli:$commonsCliVersion")
 
-    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion") {
+        exclude group: 'com.sun.mail', module: 'javax.mail'
+    }
 
     testImplementation project(':moco-core').sourceSets.test.output
 
@@ -64,7 +66,7 @@ task proguard(type: proguard.gradle.ProGuardTask, dependsOn: uberjar) {
 
 task proguardCheck(type: Test, dependsOn: proguard) {
     testLogging { exceptionFormat "full" }
-    classpath = classpath - files(sourceSets.main.output.classesDirs) - configurations.runtimeClasspath + files(proguard.outputs.files.singleFile) + findJar('netty-codec-http') + findJar('httpclient')
+    classpath = classpath - files(sourceSets.main.output.classesDirs) - configurations.runtimeClasspath + files(proguard.outputs.files.singleFile) + findJar('netty-codec-http') + findTestJar('httpclient5')
 }
 
 publishing.publications.findByName('mavenJava').artifact(proguard.outputs.files.singleFile) {
@@ -108,4 +110,8 @@ def javaModPath() {
 
 def findJar(String prefix) {
     configurations.runtimeClasspath.filter { it.name.startsWith(prefix) }
+}
+
+def findTestJar(String prefix) {
+    configurations.testRuntimeClasspath.filter { it.name.startsWith(prefix) }
 }

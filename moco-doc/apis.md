@@ -22,17 +22,20 @@ Table of Contents
   * [Form](#form)
   * [XML](#xml)
   * [XPath](#xpath)
+  * [XML Struct](#xml-struct)
   * [JSON Request](#json-request)
     * [JSON Text](#json-text)
     * [JSON Shortcut](#json-shortcut)
     * [JSON File](#json-file)
   * [JSONPath](#jsonpath)
+  * [JSON Struct](#json-struct)
   * [Operator](#operator)
     * [Match](#match)
     * [Starts With](#starts-with)
     * [Ends With](#ends-with)
     * [Contain](#contain)
     * [Exist](#exist)
+  * [Conditional](#conditional)
 * [Response](#response)
   * [Content](#content-1)
   * [Status Code](#status-code)
@@ -68,6 +71,8 @@ Table of Contents
     * [Form](#form-1)
     * [Cookie](#cookie-2)
     * [JSON](#json)
+    * [XML](#xml-1)
+    * [Client Address](#client-address)
   * [Custom Variable](#custom-variable)
   * [Template Function](#template-function)
     * [now](#now)
@@ -90,7 +95,7 @@ Table of Contents
 * [Miscellaneous](#miscellaneous)
   * [Port](#port)
   * [Log](#log)
-  * [Log with verifier](#log-with-verifier)
+    * [Log with verifier](#log-with-verifier)
 
 ## Composite Java API Design
 Moco Java API is designed in functional fashion which means you can composite any request or response easily.
@@ -927,6 +932,35 @@ For JSON API, you can decide whether the information does not exist.
     {
       "text": "bar"
     }
+}
+```
+
+#### Path
+**@Since will be at next release**
+
+**path** operator is provided to match uri with path variable.
+
+* Java API
+
+```java
+server.request(path(uri("/path/{path}/sub/{sub}"))).response("bar");
+```
+
+* JSON
+
+```json
+{
+  "request": 
+  {
+    "uri": 
+    {
+      "path": "/path/{path}/sub/{sub}"
+    }
+  },
+  "response": 
+  {
+    "text": "sub"
+  }
 }
 ```
 
@@ -2679,7 +2713,7 @@ The default parameter for `record` and `replay` is group.
       "uri" : "/record"
     },
     "response" : {
-      "record" : "foo
+      "record" : "foo"
     }
   },
   {

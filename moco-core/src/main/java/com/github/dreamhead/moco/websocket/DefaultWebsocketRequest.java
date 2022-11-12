@@ -25,11 +25,12 @@ public class DefaultWebsocketRequest implements WebsocketRequest {
     public final String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("content", content)
+                .add("clientAddress", clientAddress)
                 .toString();
     }
 
     @Override
-    public String getClientAddress() {
+    public final String getClientAddress() {
         return this.clientAddress;
     }
 }
