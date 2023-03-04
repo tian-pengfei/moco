@@ -3,6 +3,7 @@ package com.github.dreamhead.moco.resource.reader;
 import com.github.dreamhead.moco.HttpRequest;
 import com.github.dreamhead.moco.MocoException;
 import com.github.dreamhead.moco.Request;
+import com.github.dreamhead.moco.internal.SessionContext;
 import com.github.dreamhead.moco.model.MessageContent;
 import com.github.dreamhead.moco.resource.ContentResource;
 import com.google.common.collect.ImmutableList;
@@ -30,8 +31,8 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -42,7 +43,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableMap.copyOf;
 
 public class TemplateResourceReader implements ContentResourceReader {
-    private static final Version CURRENT_VERSION = Configuration.getVersion();
+    private static final Version CURRENT_VERSION = Configuration.VERSION_2_3_31;
     private static final String TEMPLATE_NAME = "template";
     private static final List<String> RESERVED_NAME = ImmutableList.of("req", "now", "random");
 
@@ -78,13 +79,22 @@ public class TemplateResourceReader implements ContentResourceReader {
             throw new IllegalStateException("Request is required to render template");
         }
 
-        MessageContent content = this.template.readFor(request);
+        return this.readFor(new SessionContext(request, null));
+    }
+
+    @Override
+    public final MessageContent readFor(final SessionContext context) {
+        if (context == null) {
+            throw new IllegalStateException("Request is required to render template");
+        }
+
+        MessageContent content = this.template.readFor(context.getRequest());
 
         try {
             Template targetTemplate = createTemplate(content);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             Writer writer = new OutputStreamWriter(stream);
-            targetTemplate.process(variables(request), writer);
+            targetTemplate.process(variables(context), writer);
             return content().withContent(stream.toByteArray()).build();
         } catch (ParseException e) {
             logger.warn("Fail to parse template: {}", content.toString());
@@ -114,17 +124,17 @@ public class TemplateResourceReader implements ContentResourceReader {
         return cfg;
     }
 
-    private ImmutableMap<String, Object> variables(final Request request) {
+    private ImmutableMap<String, Object> variables(final SessionContext context) {
         return ImmutableMap.<String, Object>builder()
-                .putAll(toVariableString(request))
+                .putAll(toVariableString(context.getRequest()))
                 .put("now", new NowMethod())
                 .put("random", new RandomMethod())
-                .put("req", toTemplateRequest(request))
+                .put("req", toTemplateRequest(context))
                 .build();
     }
 
-    private TemplateRequest toTemplateRequest(final Request request) {
-        return new TemplateRequest(request);
+    private TemplateRequest toTemplateRequest(final SessionContext context) {
+        return new TemplateRequest(context);
     }
 
     private ImmutableMap<String, Object> toVariableString(final Request request) {
@@ -143,9 +153,9 @@ public class TemplateResourceReader implements ContentResourceReader {
                 throw new IllegalArgumentException("Date format is required");
             }
 
-            Date date = new Date();
-            SimpleDateFormat format = new SimpleDateFormat(arguments.get(0).toString());
-            return format.format(date);
+            final ZonedDateTime now = ZonedDateTime.now();
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(arguments.get(0).toString());
+            return now.format(formatter);
         }
     }
 
